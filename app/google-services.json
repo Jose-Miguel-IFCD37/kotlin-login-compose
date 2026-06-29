@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "190459793017",
+    "project_id": "ifcd37-kotlin-login-compose",
+    "storage_bucket": "ifcd37-kotlin-login-compose.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:190459793017:android:ad457baabe67c878990ea8",
+        "android_client_info": {
+          "package_name": "com.visualstudioex3.logincompose"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBCSMQebKuvSU4dj_GtB_LzcrdjpfuPopQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
