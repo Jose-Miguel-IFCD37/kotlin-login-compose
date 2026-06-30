@@ -2,7 +2,6 @@ package com.visualstudioex3.logincompose
 
 import android.content.Context
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Box
@@ -30,6 +29,8 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import com.visualstudioex3.logincompose.services.FirebaseAuthService
 import com.visualstudioex3.logincompose.services.IAuthService
+import com.visualstudioex3.logincompose.services.IToastService
+import com.visualstudioex3.logincompose.services.ToastService
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
@@ -45,6 +46,7 @@ class MainActivity : ComponentActivity() {
 fun LoginScreen() {
     val context: Context = LocalContext.current
     val authService: IAuthService = FirebaseAuthService()
+    val toastService: IToastService = ToastService(context)
     val coroutineScope = rememberCoroutineScope()
 
     var usuario: String by remember { mutableStateOf("") }
@@ -90,7 +92,7 @@ fun LoginScreen() {
                             resultMessage = e.message!!
                         }
 
-                        showToast(context, resultMessage)
+                        toastService.showToast(resultMessage)
                     }
                 }, Modifier.defaultMinSize(minWidth = OutlinedTextFieldDefaults.MinWidth)
             ) {
@@ -98,9 +100,4 @@ fun LoginScreen() {
             }
         }
     }
-}
-
-fun showToast(context: Context, message: String) {
-    Toast.makeText(context, message, Toast.LENGTH_SHORT)
-        .show()
 }
