@@ -5,15 +5,32 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
-import com.google.firebase.auth.FirebaseAuth
+import com.visualstudioex3.logincompose.services.FirebaseAuthService
+import com.visualstudioex3.logincompose.services.IAuthService
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,7 +44,8 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun LoginScreen() {
     val context: Context = LocalContext.current
-    val auth: FirebaseAuth = FirebaseAuth.getInstance()
+    val authService: IAuthService = FirebaseAuthService()
+    val coroutineScope = rememberCoroutineScope()
 
     var usuario: String by remember { mutableStateOf("") }
     var password: String by remember { mutableStateOf("") }
@@ -62,21 +80,18 @@ fun LoginScreen() {
 
             Button(
                 onClick = {
-                    if (usuario.isEmpty() || password.isEmpty())
-                        showToast(
-                            context,
-                            "Debe introducir un valor para el usuario y para el password."
-                        )
-                    else auth.signInWithEmailAndPassword(usuario, password)
-                        .addOnCompleteListener {
-                            showToast(
-                                context,
-                                if (it.isSuccessful)
-                                    "Acceso Correcto"
-                                else
-                                    "Usuario o contraseña incorrectos"
-                            )
+                    coroutineScope.launch {
+                        var resultMessage: String
+
+                        try {
+                            authService.loginAsync(usuario, password)
+                            resultMessage = "Acceso Correcto"
+                        } catch (e: Exception) {
+                            resultMessage = e.message!!
                         }
+
+                        showToast(context, resultMessage)
+                    }
                 }, Modifier.defaultMinSize(minWidth = OutlinedTextFieldDefaults.MinWidth)
             ) {
                 Text("Ingresar")
