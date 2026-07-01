@@ -17,7 +17,7 @@ fun NavGraphBuilder.addLoginTopLevel(navController: NavController) {
         route = route,
         startDestination = route
     ) {
-        composable(route) { LoginView() }
+        composable(route) { LoginView(navController = navController) }
     }
 }
 
@@ -28,7 +28,7 @@ fun NavGraphBuilder.addLogoutTopLevel(navController: NavController) {
         route = route,
         startDestination = route
     ) {
-        composable(route) { LogoutView() }
+        composable(route) { LogoutView(navController = navController) }
     }
 }
 
@@ -39,7 +39,7 @@ fun NavGraphBuilder.addSigninTopLevel(navController: NavController) {
         route = route,
         startDestination = route
     ) {
-        composable(route) { SigninView() }
+        composable(route) { SigninView(navController = navController) }
     }
 }
 
@@ -50,7 +50,7 @@ fun NavGraphBuilder.addHomeTopLevel(navController: NavController) {
         route = route,
         startDestination = route
     ) {
-        composable(route) { HomeView() }
+        composable(route) { HomeView(navController = navController) }
     }
 }
 
@@ -61,6 +61,6 @@ fun NavGraphBuilder.addProfileTopLevel(navController: NavController) {
         route = route,
         startDestination = route
     ) {
-        composable(route) { ProfileView() }
+        composable(route) { ProfileView(navController = navController) }
     }
 }
