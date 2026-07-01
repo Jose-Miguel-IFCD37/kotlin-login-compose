@@ -28,18 +28,25 @@ class FirebaseAuthService: IAuthService {
                 null
         }
 
-    override suspend fun loginAsync(user: String, password: String) {
+    override suspend fun loginAsync(request: LoginRequest) {
         try {
-            check(currentSession == null) { "Ya existe una sesión activa de usuario." }
-            require(user.isNotEmpty()) { "Debe introducir un valor para el usuario." }
-            require(password.isNotEmpty()) { "Debe introducir un valor para la contraseña." }
+            check(currentSession == null) {
+                "Ya existe una sesión activa de usuario."
+            }
+            require(request.user.isNotEmpty()) {
+                "Debe introducir un valor para el usuario."
+            }
+            require(request.password.isNotEmpty()) {
+                "Debe introducir un valor para la contraseña."
+            }
 
-            Log.i(LOG_TAG, "Iniciando sesión para el usuario '$user'...")
+            Log.i(LOG_TAG, "Iniciando sesión para el usuario '$request.user'...")
 
-            auth.signInWithEmailAndPassword(user, password)
+            auth.signInWithEmailAndPassword(request.user, request.password)
                 .await()
 
-            Log.i(LOG_TAG, "Inicio de sesión correcto para el usuario '$user' ($currentSession)")
+            Log.i(LOG_TAG, "Inicio de sesión correcto para el usuario '$request.user' " +
+                    "($currentSession)")
         } catch (_: FirebaseAuthInvalidCredentialsException) {
             reportError("El usuario o la contraseña son incorrectos.")
         } catch (e: Exception) {
