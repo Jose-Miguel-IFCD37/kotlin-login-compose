@@ -3,10 +3,12 @@ package com.visualstudioex3.logincompose.services
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthUserCollisionException
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.tasks.await
 
-class FirebaseAuthService: IAuthService {
+class FirebaseAuthService : IAuthService {
     companion object {
         private const val LOG_TAG: String = "AUTH_SERVICE"
     }
@@ -68,6 +70,35 @@ class FirebaseAuthService: IAuthService {
             Log.i(LOG_TAG, "Sesión activa cerrada correctamente.")
         } catch (e: Exception) {
             reportError("Error al cerrar sesión del usuario: $e")
+        }
+    }
+
+    override suspend fun signinAsync(request: SigninRequest) {
+        try {
+            require(request.email.isNotEmpty()) {
+                "Debe introducir un valor para el correo electronico."
+            }
+            require(request.password.isNotEmpty()) {
+                "Debe introducir un valor para la contraseña."
+            }
+
+            Log.i(LOG_TAG, "Creando el usuario '${request.email}'...")
+
+            auth.createUserWithEmailAndPassword(request.email, request.password)
+                .await()
+
+            Log.i(
+                LOG_TAG,
+                "Creación de usuario '${request.email}' correcta ($currentSession)"
+            )
+        } catch (_: FirebaseAuthWeakPasswordException) {
+            reportError("La contraseña es demasiado debil.")
+        } catch (_: FirebaseAuthInvalidCredentialsException) {
+            reportError("El correo electronico no es valido.")
+        } catch (_: FirebaseAuthUserCollisionException) {
+            reportError("Ya existe un usuario con el mismo correo electronico.")
+        } catch (e: Exception) {
+            reportError("Error al crear el usuario: $e")
         }
     }
 

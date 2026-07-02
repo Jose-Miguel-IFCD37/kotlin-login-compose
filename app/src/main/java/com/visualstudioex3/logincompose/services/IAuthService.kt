@@ -10,9 +10,15 @@ data class LoginRequest(
     val password: String
 )
 
+data class SigninRequest(
+    val email: String = "",
+    val password: String = ""
+)
+
 interface IAuthService {
     val currentSession: UserSession?
 
     suspend fun loginAsync(request: LoginRequest)
     fun logout()
+    suspend fun signinAsync(request: SigninRequest)
 }
