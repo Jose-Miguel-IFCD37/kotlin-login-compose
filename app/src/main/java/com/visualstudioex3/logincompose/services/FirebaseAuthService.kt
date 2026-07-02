@@ -1,6 +1,7 @@
 package com.visualstudioex3.logincompose.services
 
 import android.util.Log
+import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
@@ -97,6 +98,9 @@ class FirebaseAuthService : IAuthService {
             reportError("El correo electronico no es valido.")
         } catch (_: FirebaseAuthUserCollisionException) {
             reportError("Ya existe un usuario con el mismo correo electronico.")
+        } catch (e: FirebaseException) {
+            reportError("La contraseña no cumple los requisitos minimos:")
+            // TODO: Find a way to get the password requisites from Firebase.
         } catch (e: Exception) {
             reportError("Error al crear el usuario: $e")
         }
