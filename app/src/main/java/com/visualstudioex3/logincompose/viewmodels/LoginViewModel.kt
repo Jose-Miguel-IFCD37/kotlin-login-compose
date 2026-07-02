@@ -47,24 +47,4 @@ class LoginViewModel(
 
         return success
     }
-
-    fun logout(): Boolean {
-        var success = false
-        var errorMessage = ""
-
-        try {
-            authService.logout()
-            success = true
-        } catch (e: Exception) {
-            errorMessage = e.message!!
-        } finally {
-            _uiState.update { currentState ->
-                currentState.copy(
-                    message = errorMessage
-                )
-            }
-        }
-
-        return success
-    }
 }

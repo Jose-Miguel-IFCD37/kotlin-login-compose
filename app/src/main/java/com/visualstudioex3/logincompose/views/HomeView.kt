@@ -53,6 +53,7 @@ fun HomeView(
 
             Button(
                 onClick = {
+                    if (viewModel.logout())
                         navController.navigate(Login)
                 },
                 Modifier.fillMaxWidth()
