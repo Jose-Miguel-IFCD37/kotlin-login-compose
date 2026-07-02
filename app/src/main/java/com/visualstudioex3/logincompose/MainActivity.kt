@@ -11,8 +11,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.visualstudioex3.logincompose.ui.theme.LoginComposeTheme
+import com.visualstudioex3.logincompose.views.Home
+import com.visualstudioex3.logincompose.views.HomeView
+import com.visualstudioex3.logincompose.views.Login
+import com.visualstudioex3.logincompose.views.LoginView
+import com.visualstudioex3.logincompose.views.Profile
+import com.visualstudioex3.logincompose.views.ProfileView
+import com.visualstudioex3.logincompose.views.Signin
+import com.visualstudioex3.logincompose.views.SigninView
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,14 +38,13 @@ class MainActivity : ComponentActivity() {
                 ) { innerPadding ->
                     NavHost(
                         navController = navController,
-                        startDestination = Screen.Home.route,
+                        startDestination = Home,
                         modifier = Modifier.padding(innerPadding)
                     ) {
-                        addLoginTopLevel(navController)
-                        addLogoutTopLevel(navController)
-                        addSigninTopLevel(navController)
-                        addHomeTopLevel(navController)
-                        addProfileTopLevel(navController)
+                        composable<Home> { HomeView(navController = navController) }
+                        composable<Login> { LoginView(navController = navController) }
+                        composable<Signin> { SigninView(navController = navController) }
+                        composable<Profile> { ProfileView(navController = navController) }
                     }
                 }
             }

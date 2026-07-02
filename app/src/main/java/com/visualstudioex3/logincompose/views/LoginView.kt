@@ -27,12 +27,15 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.visualstudioex3.logincompose.Screen
 import com.visualstudioex3.logincompose.services.LoginRequest
 import com.visualstudioex3.logincompose.viewmodels.LoginUiState
 import com.visualstudioex3.logincompose.viewmodels.LoginViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.serialization.Serializable
+
+@Serializable
+object Login
 
 @Composable
 fun LoginView(
@@ -56,6 +59,7 @@ fun LoginView(
         OutlinedTextField(
             value = user,
             onValueChange = { user = it },
+            Modifier.fillMaxWidth(),
             label = { Text("Usuario") })
 
         Spacer(modifier = Modifier.height(10.dp))
@@ -63,6 +67,7 @@ fun LoginView(
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
+            Modifier.fillMaxWidth(),
             label = { Text("Contraseña") },
             visualTransformation = PasswordVisualTransformation()
         )
@@ -76,10 +81,11 @@ fun LoginView(
                     val request = LoginRequest(user, password)
 
                     if (viewModel.loginAsync(request))
-                        navController.navigate(Screen.Home.route)
+                        navController.navigate(Home)
                 }
             },
-            Modifier.defaultMinSize(minWidth = OutlinedTextFieldDefaults.MinWidth),
+            Modifier.fillMaxWidth()
+                .defaultMinSize(minWidth = OutlinedTextFieldDefaults.MinWidth),
             !uiState.awaiting
         ) {
             Text("Iniciar sesión")
@@ -87,9 +93,10 @@ fun LoginView(
 
         Button(
             onClick = {
-                navController.navigate(Screen.Signin.route)
+                navController.navigate(Signin)
             },
-            Modifier.defaultMinSize(minWidth = OutlinedTextFieldDefaults.MinWidth),
+            Modifier.fillMaxWidth()
+                .defaultMinSize(minWidth = OutlinedTextFieldDefaults.MinWidth),
             !uiState.awaiting
         ) {
             Text("Registrarse")
