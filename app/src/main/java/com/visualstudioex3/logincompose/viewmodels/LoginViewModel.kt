@@ -10,9 +10,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
 data class LoginUiState(
-    val isLoging: Boolean = false,
-    val showError: Boolean = false,
-    val errorMessage: String = ""
+    val awaiting: Boolean = false,
+    val message: String = ""
 )
 
 class LoginViewModel(
@@ -22,13 +21,14 @@ class LoginViewModel(
     val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
 
     suspend fun loginAsync(request: LoginRequest): Boolean {
-        var success: Boolean = false
-        var errorMessage: String = ""
+        var success = false
+        var errorMessage = ""
 
         try {
             _uiState.update { currentState ->
                 currentState.copy(
-                    isLoging = true
+                    awaiting = true,
+                    message = "Iniciando sesión..."
                 )
             }
 
@@ -36,35 +36,33 @@ class LoginViewModel(
             success = true
         } catch (e: Exception) {
             errorMessage = e.message!!
-        }
-
-        _uiState.update { currentState ->
-            currentState.copy(
-                isLoging = false,
-                showError = !success,
-                errorMessage = errorMessage
-            )
+        } finally {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    awaiting = false,
+                    message = errorMessage
+                )
+            }
         }
 
         return success
     }
 
     fun logout(): Boolean {
-        var success: Boolean = false
-        var errorMessage: String = ""
+        var success = false
+        var errorMessage = ""
 
         try {
             authService.logout()
             success = true
         } catch (e: Exception) {
             errorMessage = e.message!!
-        }
-
-        _uiState.update { currentState ->
-            currentState.copy(
-                showError = !success,
-                errorMessage = errorMessage
-            )
+        } finally {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    message = errorMessage
+                )
+            }
         }
 
         return success
